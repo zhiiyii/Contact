@@ -1,11 +1,13 @@
 package my.edu.tarc.contact
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import my.edu.tarc.contact.databinding.FragmentFirstBinding
 
 /**
@@ -31,14 +33,21 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("First Fragment", "onViewCreated")
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        // Attach adapter to the RecyclerView
+        val contactAdapter = ContactAdapter()
+
+        with(binding.recyclerViewContact) {
+            layoutManager = LinearLayoutManager(requireActivity())
+            contactAdapter.setContact(MainActivity.contactList)
+            adapter = contactAdapter
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d("First Fragment", "onDestroyView")
     }
 }

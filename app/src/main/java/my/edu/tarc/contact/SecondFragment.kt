@@ -4,16 +4,24 @@ import android.app.Instrumentation.ActivityResult
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.PatternMatcher
+import android.service.controls.actions.FloatAction
+import android.util.Patterns
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import my.edu.tarc.contact.databinding.FragmentSecondBinding
 import my.edu.tarc.contact.model.Profile
 import java.io.File
@@ -42,14 +50,15 @@ class SecondFragment : Fragment(), MenuProvider {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val fab : View? = requireActivity().findViewById(R.id.fab)
+        fab!!.isVisible = false
 
         // Enable menu handling here
         val menuHost: MenuHost = requireActivity()
@@ -83,6 +92,9 @@ class SecondFragment : Fragment(), MenuProvider {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+
+        val fab : View? = requireActivity().findViewById(R.id.fab)
+        fab!!.isVisible = true
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -93,6 +105,19 @@ class SecondFragment : Fragment(), MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         if (menuItem.itemId == R.id.action_save) {
+            if (binding.editTextName.text.toString().isNullOrEmpty()){
+                binding.editTextName.error = getString(R.string.invalid_input)
+                return false
+            }
+            if (!Helper().isValidEmail(binding.editTextEmail.text.toString())) {
+                binding.editTextEmail.error = getString(R.string.invalid_input)
+                return false
+            }
+            if (!Helper().isValidPhone(binding.editTextPhone.text.toString())) {
+                binding.editTextPhone.error = getString(R.string.invalid_input)
+                return false
+            }
+
             /*
             val pref = activity?.getPreferences(Context.MODE_PRIVATE)?: return true
             with (pref.edit()) {
@@ -120,6 +145,11 @@ class SecondFragment : Fragment(), MenuProvider {
 
             // Save profile info to Shared Preference
             saveProfilePicture()
+
+            Snackbar.make(this.requireActivity().findViewById(R.id.constraintLayout_second),
+                getString(R.string.record_saved), Snackbar.LENGTH_SHORT).show()
+        } else if (menuItem.itemId == android.R.id.home) {
+            findNavController().navigateUp()
         }
         return true
     }

@@ -10,6 +10,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import my.edu.tarc.contact.databinding.ActivityMainBinding
+import my.edu.tarc.contact.model.Contact
+import java.util.LinkedList
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,8 +31,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            navController.navigate(R.id.action_FirstFragment_to_AddContactFragment)
         }
     }
 
@@ -54,5 +55,9 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    companion object {
+        var contactList = LinkedList<Contact>()
     }
 }
