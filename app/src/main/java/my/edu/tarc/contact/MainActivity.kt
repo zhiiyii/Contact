@@ -9,14 +9,18 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import my.edu.tarc.contact.databinding.ActivityMainBinding
 import my.edu.tarc.contact.model.Contact
+import my.edu.tarc.contact.viewmodel.ContactViewModel
 import java.util.LinkedList
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    // Declare a view model
+    private val contactViewModel: ContactViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 
-    companion object {
-        var contactList = LinkedList<Contact>()
-    }
+//    companion object {
+//        var contactList = LinkedList<Contact>()
+//    }
 }

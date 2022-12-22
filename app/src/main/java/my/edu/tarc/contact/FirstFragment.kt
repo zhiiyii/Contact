@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import my.edu.tarc.contact.databinding.FragmentFirstBinding
+import my.edu.tarc.contact.viewmodel.ContactViewModel
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -20,6 +22,8 @@ class FirstFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private val contactViewModel: ContactViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +42,14 @@ class FirstFragment : Fragment() {
         // Attach adapter to the RecyclerView
         val contactAdapter = ContactAdapter()
 
+        // check for changes, contactList is live data
+        contactViewModel.contactList.observe(viewLifecycleOwner) {
+            contactAdapter.setContact(it)
+        }
+
         with(binding.recyclerViewContact) {
             layoutManager = LinearLayoutManager(requireActivity())
-            contactAdapter.setContact(MainActivity.contactList)
+//            contactAdapter.setContact(MainActivity.contactList)
             adapter = contactAdapter
         }
     }

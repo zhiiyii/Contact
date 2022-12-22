@@ -3,18 +3,22 @@ package my.edu.tarc.contact
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import my.edu.tarc.contact.databinding.FragmentAddContactBinding
 import my.edu.tarc.contact.model.Contact
+import my.edu.tarc.contact.viewmodel.ContactViewModel
 
 class AddContactFragment : Fragment(), MenuProvider {
     private var _binding: FragmentAddContactBinding? = null
     private val binding get() = _binding!!
+    private val contactViewModel: ContactViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +67,9 @@ class AddContactFragment : Fragment(), MenuProvider {
                 binding.editTextAddPhone.text.toString(),
                 binding.editTextAddEmail.text.toString(),
             )
-            MainActivity.contactList.add(contact)
+            // MainActivity.contactList.add(contact)
+
+            contactViewModel.insert(contact)
 
             Snackbar.make(this.requireActivity().findViewById(R.id.addContactLayout),
                 getString(R.string.record_saved), Snackbar.LENGTH_SHORT).show()
